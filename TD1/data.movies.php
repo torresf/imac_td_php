@@ -15,7 +15,7 @@ $movies = array(
 	array("title"=>"A Clockwork Orange", "genre"=>"Drama", "year"=>"1971", "director"=>"Stanley Kubrick"),
 	array("title"=>"Apocalypse Now", "genre"=>"Drama", "year"=>"1979", "director"=>"Francis Ford Coppola"),
 	array("title"=>"The Lord of the Rings: The Fellowship of the Ring", "genre"=>"Action", "year"=>"2001", "director"=>"Peter Jackson"),
-	array("title"=>"Star Wars Episode V: The Empire Strikes Back", "genre"=>"Science Ficton", "year"=>"1980", "director"=>"Irvin Kershner"),
+	array("title"=>"Star Wars Episode V: The Empire Strikes Back", "genre"=>"Science Fiction", "year"=>"1980", "director"=>"Irvin Kershner"),
 	array("title"=>"Eternal Sunshine of the Spotless Mind", "genre"=>"Drama", "year"=>"2004", "director"=>"Michel Gondry"),
 	array("title"=>"Old Boy", "genre"=>"Drama", "year"=>"2003", "director"=>"Park Chan-Wook"),
 	array("title"=>"Mononoke Hime", "genre"=>"Animation", "year"=>"1997", "director"=>"Hayao Miyazaki"),
