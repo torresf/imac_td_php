@@ -12,7 +12,7 @@ if(isset($_POST['SubmitButton'])){ //cCheck if form was submitted
 <h1>Movies</h1>
 <form action="" method="post">
 	<select name="genre">
-		<option value="all" selected>all</option>
+		<option value="" selected>all</option>
 		<option value="Drama">Drama</option>
 		<option value="Science Fiction">Science Fiction</option>
 		<option value="Action">Action</option>
@@ -52,26 +52,26 @@ if ($movies) {
 function render_movie_list($movies, $genre, $year){
 	$temp_array = array();
 	if ($movies) {
-		if ($genre != "all" && $year != "") {
+		if ($genre && $year) { //If the year and te genre are defined, filter by year and genre
 			foreach ($movies as $movie) {
 				if ($movie['genre'] == $genre && $movie['year'] == $year)
 					array_push($temp_array, $movie);
 			}
-		} else if ($genre == "all" && $year != "") {
+		} else if (!$genre && $year) { //If only the year is defined, filter by year
 			foreach ($movies as $movie) {
 				if ($movie['year'] == $year)
 					array_push($temp_array, $movie);
 			}
-		} else if ($genre != "all" && $year == "") {
+		} else if ($genre && !$year) { //If only the genre is defined, filter by genre
 			foreach ($movies as $movie) {
 				if ($movie['genre'] == $genre)
 					array_push($temp_array, $movie);
 			}
-		} else {
+		} else { // No filter
 			$temp_array = $movies;
 		}
 	}
-	return $temp_array;
+	return $temp_array; // return the filtered array
 }
 
 ?>
