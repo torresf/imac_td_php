@@ -12,8 +12,8 @@ if(isset($_POST['SubmitButton'])){ //cCheck if form was submitted
 <h1>Movies</h1>
 <form action="" method="post">
 	<select name="genre">
-		<option value="all" selected>all</option> 
-		<option value="Drama">Drama</option> 
+		<option value="all" selected>all</option>
+		<option value="Drama">Drama</option>
 		<option value="Science Fiction">Science Fiction</option>
 		<option value="Action">Action</option>
 		<option value="Adventure">Adventure</option>
@@ -31,12 +31,12 @@ if(isset($_POST['SubmitButton'])){ //cCheck if form was submitted
 if ($movies) {
 	echo "<div class='container'>";
 	foreach ($movies as $movie) { // For each movie, we create an item in the grid
-		echo "<div class='movie'><h3>{$movie['title']}</h3>";
+		echo "<div class='movie'><h3>{$movie['title']}</h3>"; // Display the title
 			echo "<ul>";
-				echo $movie['director'];
+				echo $movie['director']; // Display the director
 				echo "<div class='genre ".($movie["genre"] == 'Science Fiction' ? "sf" : "")."'>{$movie['genre']}</div>"; //Adding the class "sf", to the sci-fi movies
-				if ($movie['year'] >= date("Y") - 10) {
-					echo "<div class='year recent'>{$movie['year']} - récent</div>"; //Adding the class "recent", to the recent movies (<10 years old)
+				if ($movie['year'] > date("Y") - 10) {
+					echo "<div class='year recent'>{$movie['year']} - récent</div>"; //Adding the class "recent", to the recent movies (< 10 years old)
 				} else {
 					echo "<div class='year'>{$movie['year']}</div>";
 				}
@@ -52,19 +52,23 @@ if ($movies) {
 function render_movie_list($movies, $genre, $year){
 	$temp_array = array();
 	if ($movies) {
-		foreach ($movies as $movie) {
-			if ($genre != "all" && $year != "") {
+		if ($genre != "all" && $year != "") {
+			foreach ($movies as $movie) {
 				if ($movie['genre'] == $genre && $movie['year'] == $year)
 					array_push($temp_array, $movie);
-			} else if ($genre == "all" && $year != "") {
+			}
+		} else if ($genre == "all" && $year != "") {
+			foreach ($movies as $movie) {
 				if ($movie['year'] == $year)
 					array_push($temp_array, $movie);
-			} else if ($genre != "all" && $year == "") {
+			}
+		} else if ($genre != "all" && $year == "") {
+			foreach ($movies as $movie) {
 				if ($movie['genre'] == $genre)
 					array_push($temp_array, $movie);
-			} else {
-				$temp_array = $movies;
 			}
+		} else {
+			$temp_array = $movies;
 		}
 	}
 	return $temp_array;
