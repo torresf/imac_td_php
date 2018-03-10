@@ -6,7 +6,6 @@ class Personne {
 	private $ville;
 
 	public function __construct($prenom, $nom, $age, $ville) {
-		// -- à compléter
 		$this->prenom = (string) ucwords(strtolower($prenom));
 		$this->nom = (string) ucwords(strtolower($nom));
 		$this->age = (int) $age;
