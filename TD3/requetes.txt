@@ -1,0 +1,129 @@
+## 1. SELECTIONS SIMPLES
+
+# a.
+SELECT * 
+FROM cast;
+
+# b.
+SELECT * 
+FROM cast 
+WHERE deathYear IS NULL;
+
+# c.
+SELECT * 
+FROM cast
+WHERE deathYear IS NULL 
+  AND birthYear < YEAR(NOW()) - 65;
+
+# d.
+SELECT * 
+FROM cast
+WHERE deathYear IS NULL 
+ORDER BY birthYear
+LIMIT 1;
+
+# e.
+SELECT * 
+FROM cast
+WHERE YEAR(NOW()) - birthYear BETWEEN 30 AND 50
+ORDER BY (YEAR(NOW()) - birthYear) DESC;
+
+# f.
+SELECT * 
+FROM movie
+WHERE title LIKE "%the%";
+
+
+
+## 2. JOINTURES
+
+# a.
+SELECT title, releaseDate 
+FROM movie 
+WHERE idCountry = "USA"
+ORDER BY releaseDate DESC;
+
+# b.
+SELECT title, releaseDate, name
+FROM movie 
+INNER JOIN country ON country.code = movie.idCountry
+WHERE idCountry = "USA"
+	AND YEAR(releaseDate) >= YEAR(NOW()) - 10  
+ORDER BY releaseDate;
+
+# c.
+SELECT movie.title AS Titre, genre.name AS Genre
+FROM movie 
+INNER JOIN moviegenre ON moviegenre.idMovie = movie.id
+INNER JOIN genre ON genre.id = moviegenre.idGenre
+WHERE idCountry IN ("USA", "IT")
+	AND YEAR(releaseDate) <= YEAR(NOW()) - 20;
+
+# d.
+SELECT DISTINCT cast.firstname, cast.lastname
+FROM movie m
+INNER JOIN actor a ON m.id = a.idMovie
+INNER JOIN cast ON a.idActor = cast.id
+ORDER BY lastname, firstname;
+
+# e.
+SELECT m.title AS Titre, g.name AS Genre, a.name AS "Rôle"
+FROM genre g, movie m, actor a, cast c, moviegenre
+WHERE m.id = a.idMovie
+	AND m.idCountry = "FR"
+	AND CONCAT(c.firstname, " ", c.lastname) = "Élodie Deshayes"
+	AND a.idActor = c.id
+	AND m.id = moviegenre.idMovie
+	AND moviegenre.idGenre = g.id;
+
+# f.
+SELECT c.firstname AS "Prénom", c.lastname AS "Nom", a.name AS "Rôle"
+FROM movie m, actor a, cast c, director d
+WHERE d.idDirector = (SELECT id FROM cast WHERE CONCAT(cast.firstname, " ", cast.lastname) = "Myriam Anik")
+	AND d.idMovie = m.id
+	AND a.idMovie = m.id
+	AND a.idActor = c.id
+ORDER BY a.name;
+
+
+
+## 3. REQUETES COMPLEXES
+
+# a.
+SELECT g.name AS Genre, COUNT(*) AS "Nombre de films"
+FROM movie m
+INNER JOIN moviegenre mg ON mg.idMovie = m.id
+INNER JOIN genre g ON g.id = mg.idGenre
+GROUP BY g.name;
+
+# b.
+SELECT COUNT(*) AS "Nb Films avec Voix Off"
+FROM actor
+WHERE actor.name = "Voix Off";
+
+# c.
+SELECT c.firstname AS "Prénom", c.lastname AS "Nom"
+FROM cast c, actor a
+WHERE c.id = a.idActor
+	AND (a.name = "Développeur" OR a.name = "Développeuse");
+
+# d.
+SELECT m.title as Titre
+FROM movie m, director d
+WHERE m.id = d.idMovie
+GROUP BY m.title
+HAVING COUNT(*) > 1;
+
+# e.
+SELECT m.title as Titre, g.name AS Genre, country.name as Pays, m.releaseDate AS "Date de Sortie", CONCAT(cast.firstname, " ", cast.lastname) AS "Prénom Nom"
+FROM movie m, genre g, country, moviegenre, cast, director d
+WHERE country.code IN ("USA", "IT", "FR")
+	AND m.idCountry = country.code
+	AND g.name IN ("Action", "Drama", "Comedy", "Western")
+	AND g.id = moviegenre.idGenre
+	AND m.id = moviegenre.idMovie
+	AND m.title LIKE "%a%"
+	AND DATE(m.releaseDate) BETWEEN DATE("2000-01-01") AND NOW()
+	AND cast.id = d.idDirector
+	AND d.idMovie = m.id
+	AND CONCAT(cast.firstname, " ", cast.lastname) LIKE "%o%";
