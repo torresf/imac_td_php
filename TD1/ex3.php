@@ -1,7 +1,7 @@
 <?php 
 require_once("data.movies.php"); // Loading of datas, especially the movie array containing all the data
 
-if(isset($_POST['SubmitButton'])){ //cCheck if form was submitted
+if (isset($_POST['SubmitButton'])) { // Check if form was submitted
 	$year = $_POST['year']; // Get year
 	$genre = $_POST['genre']; // Get genre
 	$movies = render_movie_list($movies, $genre, $year); // Filter by genre and year
