@@ -43,7 +43,7 @@ class Cast {
 		if (($object = $stmt->fetch()) !== false) {
 			return $object;
 		} else {
-			throw new Exception("Erreur : l'id N°$id n'existe pas.");
+			throw new Exception("Erreur : le cast N°$id n'existe pas.");
 		}
 	}
 

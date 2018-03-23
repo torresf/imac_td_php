@@ -240,6 +240,7 @@ class Movie {
 
 	/**
 	 * Ajoute un film à la base de données
+	 * @param string $title titre du film, string $releaseDate date de sortie, string $country code du pays
 	 */
 	public static function addMovie($title, $releaseDate, $country) {
 

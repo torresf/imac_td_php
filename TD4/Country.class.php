@@ -37,7 +37,7 @@ class Country {
 		if (($object = $stmt->fetch()) !== false) {
 			return $object;
 		} else {
-			throw new Exception("Erreur : le code $code n'existe pas.");
+			throw new Exception("Erreur : le pays $code n'existe pas.");
 		}
 	}
 
