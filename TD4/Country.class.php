@@ -25,14 +25,19 @@ class Country {
 	 * @return Country instance correspondant à $code
 	 * @throws Exception s'il n'existe pas cet $code dans a bdd
 	 */
-	public static function createFromCode($code){
+	public static function createFromCode($code) {
+		// Préparation de la requête
 		$stmt = MyPDO::getInstance()->prepare("
 			SELECT *
 			FROM Country
 			WHERE code = ?
 		");
+
+		// On lie le $code en paramètre à la requête, puis on l'exécute
 		$stmt->bindValue(1, $code);
 		$stmt->execute();
+
+		// On récupère une instance de la classe Country
 		$stmt->setFetchMode(PDO::FETCH_CLASS, "Country");
 		if (($object = $stmt->fetch()) !== false) {
 			return $object;
@@ -68,12 +73,15 @@ class Country {
 	 * @return array<Country> liste d'instances de Country
 	 */
 	public static function getAll() {
+		// Préparation de la requête
 		$stmt = MyPDO::getInstance()->prepare("
 			SELECT DISTINCT c.* 
 			FROM Country c
 			INNER JOIN movie m ON m.idCountry = c.code
 			ORDER BY c.name
 		");
+
+		// Exécution de la requête
 		$stmt->execute();
 
 		// On récupère un tableau d'instances de la classe Country

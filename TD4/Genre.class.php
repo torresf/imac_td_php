@@ -25,14 +25,19 @@ class Genre {
 	 * @return Genre instance correspondant à $id
 	 * @throws Exception s'il n'existe pas cet $id dans a bdd
 	 */
-	public static function createFromId($id){
+	public static function createFromId($id) {
+		// Préparation de la requête
 		$stmt = MyPDO::getInstance()->prepare("
 			SELECT *
 			FROM Genre
 			WHERE id = ?
 		");
+
+		//On lie l'id en paramètre à la requête, puis on l'exécute
 		$stmt->bindValue(1, $id);
 		$stmt->execute();
+
+		// On récupère le résultat sous forme d'instance de Genre
 		$stmt->setFetchMode(PDO::FETCH_CLASS, "Genre");
 		if (($object = $stmt->fetch()) !== false) {
 			return $object;
@@ -68,6 +73,7 @@ class Genre {
 	 * @return array<Genre> liste d'instances de Genre
 	 */
 	public static function getAll() {
+		// Préparation de la requête
 		$stmt = MyPDO::getInstance()->prepare("
 			SELECT DISTINCT genre.* 
 			FROM genre
@@ -75,7 +81,11 @@ class Genre {
 			INNER JOIN movie m ON m.id = mg.idMovie
 			ORDER BY genre.name
 		");
+
+		// Execution de la requête
 		$stmt->execute();
+
+		// On récupère le résultat sous forme de tableau d'instances de Genre
 		$stmt->setFetchMode(PDO::FETCH_CLASS, 'Genre');
 		if (($objects = $stmt->fetchAll()) !== false) {
 			return $objects;
