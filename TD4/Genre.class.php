@@ -1,5 +1,5 @@
 <?php
-require_once 'MyPDO.imac-movies.include.php'; //TO DO : à modifier
+require_once 'MyPDO.imac-movies.include.php';
 
 /**
  * Classe Genre
@@ -26,7 +26,6 @@ class Genre {
 	 * @throws Exception s'il n'existe pas cet $id dans a bdd
 	 */
 	public static function createFromId($id){
-		// TO DO
 		$stmt = MyPDO::getInstance()->prepare("
 			SELECT *
 			FROM Genre
@@ -49,7 +48,6 @@ class Genre {
 	 * @return int $id
 	 */
 	public function getId() {
-		// TO DO
 		return $this->id;
 	}
 
@@ -58,7 +56,6 @@ class Genre {
 	 * @return string $name
 	 */
 	public function getName() {
-		// TO DO
 		return $this->name;
 	}
 
@@ -71,7 +68,6 @@ class Genre {
 	 * @return array<Genre> liste d'instances de Genre
 	 */
 	public static function getAll() {
-		// TO DO
 		$stmt = MyPDO::getInstance()->prepare("
 			SELECT DISTINCT genre.* 
 			FROM genre

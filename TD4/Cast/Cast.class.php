@@ -1,5 +1,5 @@
 <?php
-require_once '../MyPDO.imac-movies.include.php'; // TO DO : à modifier
+require_once '../MyPDO.imac-movies.include.php';
 
 /**
  * Classe Cast
@@ -31,14 +31,18 @@ class Cast {
 	 * @throws Exception s'il n'existe pas cet $id dans a bdd
 	 */
 	public static function createFromId($id){
-		// TO DO
+		// Préparation de la requête
 		$stmt = MyPDO::getInstance()->prepare("
 			SELECT *
 			FROM Cast
 			WHERE id = ?
 		");
+
+		// On lie l'id passé en paramètre à la requête, puis on l'exécute
 		$stmt->bindValue(1, $id);
 		$stmt->execute();
+
+		// On récupère le résultat de la requête sous forme d'instance de Cast
 		$stmt->setFetchMode(PDO::FETCH_CLASS, "Cast");
 		if (($object = $stmt->fetch()) !== false) {
 			return $object;
@@ -54,7 +58,6 @@ class Cast {
 	 * @return int $id
 	 */
 	public function getId() {
-		// TO DO
 		return $this->id;
 	}
 
@@ -63,7 +66,6 @@ class Cast {
 	 * @return string $firstname
 	 */
 	public function getFirstname() {
-		// TO DO
 		return $this->firstname;
 	}
 
@@ -72,7 +74,6 @@ class Cast {
 	 * @return string $lastname
 	 */
 	public function getLastname() {
-		// TO DO
 		return $this->lastname;
 	}
 
@@ -81,7 +82,6 @@ class Cast {
 	 * @return int $birthYear
 	 */
 	public function getBirthYear() {
-		// TO DO
 		return $this->birthYear;
 	}
 
@@ -90,7 +90,6 @@ class Cast {
 	 * @return int $deathYear (null si vivant)
 	 */
 	public function getDeathYear() {
-		// TO DO
 		return $this->deathYear;
 	}
 	
@@ -99,7 +98,6 @@ class Cast {
 	 * @return bool
 	 */
 	public function isAlive() {
-		// TO DO
 		return $this->deathYear == null;
 	}
 
@@ -111,14 +109,17 @@ class Cast {
 	 * @return array<Cast> liste d'instances de Cast
 	 */
 	public static function getAll() {
-		// TO DO
+		// Préparation de la requête
 		$stmt = MyPDO::getInstance()->prepare("
 			SELECT *
 			FROM Cast
 			ORDER BY lastname, firstname
 		");
 
+		// Exécution de la requête
 		$stmt->execute();
+
+		// On récupère le résultat sous forme de tableau d'instances de Cast
 		$stmt->setFetchMode(PDO::FETCH_CLASS, 'Cast');
 		if (($objects = $stmt->fetchAll()) !== false) {
 			return $objects;
@@ -134,7 +135,7 @@ class Cast {
 	 * @return array<Cast> liste des instances de Cast
 	 */
 	public static function getDirectorsFromMovieId($idMovie) {
-		// TO DO next : #04 Jointure Cast - Movie
+		// Préparation de la requête
 		$stmt = MyPDO::getInstance()->prepare("
 			SELECT Cast.*
 			FROM Cast
@@ -143,8 +144,12 @@ class Cast {
 			WHERE movie.id = ?
 			ORDER BY firstname, lastname
 		");
+
+		// On lie l'id du film à la requête, puis on l'exécute
 		$stmt->bindValue(1, $idMovie);
 		$stmt->execute();
+
+		// On récupére le résultat de la requête sous forme de tableau d'instances de Cast
 		$stmt->setFetchMode(PDO::FETCH_CLASS, 'Cast');
 		if (($objects = $stmt->fetchAll()) !== false) {
 			return $objects;
@@ -160,7 +165,7 @@ class Cast {
 	 * @return array<Cast> liste d'instances de Cast
 	 */
 	public static function getActorsFromMovieId($idMovie) {
-		// TO DO next : #04 Jointure Cast - Movie
+		// Préparation de la requête
 		$stmt = MyPDO::getInstance()->prepare("
 			SELECT c.*, a.name
 			FROM Cast c
@@ -169,8 +174,12 @@ class Cast {
 			WHERE m.id = ?
 			ORDER BY firstname, lastname
 		");
+		
+		// On lie l'id du film à la requête, puis on l'exécute
 		$stmt->bindValue(1, $idMovie);
 		$stmt->execute();
+
+		// On récupère les résultats sous forme de tableau d'instances de Cast
 		$stmt->setFetchMode(PDO::FETCH_CLASS, 'Cast');
 		if (($objects = $stmt->fetchAll()) !== false) {
 			return $objects;

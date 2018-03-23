@@ -48,7 +48,6 @@ class Country {
 	 * @return int $id
 	 */
 	public function getCode() {
-		// TO DO
 		return $this->code;
 	}
 
@@ -57,7 +56,6 @@ class Country {
 	 * @return string $name
 	 */
 	public function getName() {
-		// TO DO
 		return $this->name;
 	}
 
@@ -77,6 +75,8 @@ class Country {
 			ORDER BY c.name
 		");
 		$stmt->execute();
+
+		// On récupère un tableau d'instances de la classe Country
 		$stmt->setFetchMode(PDO::FETCH_CLASS, 'Country');
 		if (($objects = $stmt->fetchAll()) !== false) {
 			return $objects;

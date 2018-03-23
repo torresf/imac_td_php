@@ -4,7 +4,7 @@ require_once "Movie.class.php";
 require_once "../Cast/Cast.class.php";
 require_once "../Country.class.php";
 
-echo '<a href="movies.php">Retour à la liste des films</a><br/>';
+?> <a href="movies.php">Retour à la liste des films</a><br/> <?php
 
 if (isset($_GET['id'])) {
 	$id = $_GET['id'];
@@ -23,12 +23,14 @@ if (isset($_GET['id'])) {
 
 			// Listage des genres
 			$genres = $movie->getGenres();
-			$main .= "Genre(s) : <br />";
-			$main .= "<ul>";
-			foreach ($genres as $genre) {
-				$main .= "<li>{$genre->getName()}</li>";
+			if (!empty($genres)) {
+				$main .= "Genre(s) : <br />";
+				$main .= "<ul>";
+				foreach ($genres as $genre) {
+					$main .= "<li>{$genre->getName()}</li>";
+				}
+				$main .= "</ul>";
 			}
-			$main .= "</ul>";
 			
 			// Listage des Réalisateurs
 			$directors = Cast::getDirectorsFromMovieId($movie->getId());
@@ -63,20 +65,23 @@ if (isset($_GET['id'])) {
 	}
 }
 
-?>
-<!-- Formulaire de suppression -->
-<form method="POST" action="">
-	<input type="hidden" name="idMovie">
-	<input type="submit" name="SubmitButton" value="Supprimer le film"/>
-</form>
+if (isset($movie)) { 
+	?>
 
-<?php 
+	<!-- Formulaire de suppression -->
+	<form method="POST" action="">
+		<input type="hidden" name="idMovie">
+		<input type="submit" name="SubmitButton" value="Supprimer le film"/>
+	</form>
+
+	<?php 
+}
 
 // Suppression d'un film
 if (isset($_POST['SubmitButton'])) {
 	// Appel de la fonction de suppression avec l'id correspondant au film
 	Movie::removeMovie($movie->getId());
-	// Redirection vers movie.php une fois le film supprimé
+	// Redirection vers movies.php une fois le film supprimé
 	header('Location: movies.php');
 }
 

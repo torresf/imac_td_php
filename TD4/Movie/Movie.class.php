@@ -29,15 +29,19 @@ class Movie {
 	 * @return Movie instance correspondant à $id
 	 * @throws Exception s'il n'existe pas cet $id dans a bdd
 	 */
-	public static function createFromId($id){
+	public static function createFromId($id) {
+		// Préparation de la requête
 		$stmt = MyPDO::getInstance()->prepare("
 			SELECT *
 			FROM Movie
 			WHERE id = ?
 		");
 
+		// On lie l'identifiant en paramètre à la requête, puis on l'exécute
 		$stmt->bindValue(1, $id);
 		$stmt->execute();
+
+		// On récupère le résultat de la requête sous forme d'instance de la classe Movie
 		$stmt->setFetchMode(PDO::FETCH_CLASS, "Movie");
 		if (($object = $stmt->fetch()) !== false) {
 			return $object;
@@ -185,18 +189,7 @@ class Movie {
 	 * @return array<Movie> liste d'instances de Movie
 	 */
 	public static function searchMovies($title, $cast, $date_start, $date_end, $genres, $country) {
-
-		// Si aucun genre n'est sélectionné, la recherche se fait sur tous les genres
-		if (empty($genres)) {
-			$genres_array = Genre::getAll();
-			$genres = "";
-			foreach ($genres_array as $genre) {
-				$genres .= $genre->getName() .",";
-			}
-		} else {
-			$genres = implode(",", $genres);
-		}
-
+		//Préparation de la requête SQL
 		$stmt = MyPDO::getInstance()->prepare("
 			SELECT m.id, m.title, m.releaseDate
 			FROM movie m, country, cast, director d, actor a, genre g, moviegenre mg
@@ -216,12 +209,24 @@ class Movie {
 			ORDER BY m.title
 		");
 
-		// Dates par défaut
+		// Dates par défaut si les dates ne sont pas renseignées
 		if ($date_start=="")
 			$date_start = "0000-01-01";
 		if ($date_end=="")
 			$date_end = "2100-01-01";
 
+		// Si aucun genre n'est sélectionné, la recherche se fait sur tous les genres
+		if (empty($genres)) {
+			$genres_array = Genre::getAll();
+			$genres = "";
+			foreach ($genres_array as $genre) {
+				$genres .= $genre->getName() .",";
+			}
+		} else {
+			$genres = implode(",", $genres);
+		}
+
+		// On lie les valeurs à la requête
 		$stmt->bindValue(":title", "%".$title."%");
 		$stmt->bindValue(":country", $country);
 		$stmt->bindValue(":cast", "%".$cast."%");
@@ -229,7 +234,10 @@ class Movie {
 		$stmt->bindValue(":date_end", $date_end);
 		$stmt->bindValue(":genres", $genres);
 
+		// On execute la requête
 		$stmt->execute();
+
+		// On récupère les résultats de la requête sous forme de tableau d'instances de la classe Movie
 		$stmt->setFetchMode(PDO::FETCH_CLASS, 'Movie');
 		if (($objects = $stmt->fetchAll()) !== false) {
 			return $objects;
@@ -243,23 +251,23 @@ class Movie {
 	 * @param string $title titre du film, string $releaseDate date de sortie, string $country code du pays
 	 */
 	public static function addMovie($title, $releaseDate, $country) {
-
 		// Préparation de la requête
 		$stmt = MyPDO::getInstance()->prepare("
-			INSERT INTO Movie VALUES (:id, :title, :releaseDate, :country)
+			INSERT INTO Movie(`title`, `releaseDate`, `idCountry`) VALUES (:title, :releaseDate, :country)
 		");
 
-		$id = count(Movie::getAll());
-		$stmt->bindValue(":id", $id+1);
+		// On lie les valeurs à la requête
 		$stmt->bindValue(":title", $title);
 		$stmt->bindValue(":releaseDate", $releaseDate);
 		$stmt->bindValue(":country", $country);
 
+		// On exécute la requête
 		$stmt->execute();
 	}
 
 	/**
 	 * Supprime un film de la base de données
+	 * @param int $idMovie identifiant du film
 	 */
 	public static function removeMovie($idMovie) {
 		// Préparation de la requête
@@ -267,7 +275,11 @@ class Movie {
 			DELETE FROM Movie 
 			WHERE id = :id
 		");
+
+		// On lie l'id du film à supprimer à la requête 
 		$stmt->bindValue(":id", $idMovie);
+
+		// On exécute la requête
 		$stmt->execute();
 	}
 

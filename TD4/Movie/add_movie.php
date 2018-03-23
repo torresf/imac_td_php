@@ -33,7 +33,7 @@ require_once "../Country.class.php";
 
 <?php 
 
-// Ajout d'un film
+// Validation du formulaire : Ajout d'un film
 if (isset($_POST['SubmitButton'])) {
 	if (isset($_POST["title"]) && isset($_POST["releaseDate"]) && isset($_POST["country"])) {
 		// On récupère les champs du formulaire
